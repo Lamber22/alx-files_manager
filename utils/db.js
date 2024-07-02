@@ -13,7 +13,9 @@ class DBClient {
   }
 
   async connectDB() {
-    await this.client.connect();
+    await this.client.connect(() => {
+      console.log('DB connected successfully!');
+    });
     this.db = this.client.db(database);
   }
 
