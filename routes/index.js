@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { getStatus, getStats } from './AppController';
+import { getStatus, getStats } from '../controllers/AppController';
 
 const router = Router();
 
 router.get('/status', getStatus);
 router.get('/stats', getStats);
+
 router.post('/users', UsersController.postNew);
 
 router.get('/connect', AuthController.getConnect);
