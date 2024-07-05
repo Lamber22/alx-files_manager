@@ -22,6 +22,7 @@ class RedisClient {
   async get(key) {
     const redisGet = promisify(this.client.get).bind(this.client);
     const value = await redisGet(key);
+    if (!value) return null;
     return value;
   }
 
@@ -29,7 +30,7 @@ class RedisClient {
   async set(key, value, time) {
     const redisSet = promisify(this.client.set).bind(this.client);
     await redisSet(key, value);
-    await this.client.expire(key, time);
+    this.client.expire(key, time);
   }
 
   // del key vale pair from redis server
@@ -40,4 +41,4 @@ class RedisClient {
 }
 const redisClient = new RedisClient();
 
-module.exports = redisClient;
+export default redisClient;
