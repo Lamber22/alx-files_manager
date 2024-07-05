@@ -12,28 +12,30 @@ class UsersController {
     const { password } = request.body;
 
     if (!email) {
-      response.status(400).json({ error: 'Missing email' });
+      return response.status(400).json({ error: 'Missing email' });
     }
     if (!password) {
-      response.status(400).json({ error: 'Missing password' });
+      return response.status(400).json({ error: 'Missing password' });
     }
 
     const users = dbClient.db.collection('users');
-    users.findOne({ email }, (err, user) => {
+    return users.findOne({ email }, (err, user) => {
       if (user) {
-        response.status(400).json({ error: 'Already exist' });
-      } else {
-        const hashedPassword = sha1(password);
-        users.insertOne(
-          {
-            email,
-            password: hashedPassword,
-          },
-        ).then((result) => {
+        return response.status(400).json({ error: 'Already exist' });
+      }
+      const hashedPassword = sha1(password);
+      return users
+        .insertOne({
+          email,
+          password: hashedPassword,
+        })
+        .then((result) => {
           response.status(201).json({ id: result.insertedId, email });
           userQueue.add({ userId: result.insertedId });
-        }).catch((error) => console.log(error));
-      }
+        })
+        .catch(() => {
+          response.status(500).json({ error: 'Internal Server Error' });
+        });
     });
   }
 
