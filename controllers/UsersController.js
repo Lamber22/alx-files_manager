@@ -12,10 +12,10 @@ class UsersController {
     const { password } = request.body;
 
     if (!email) {
-      return response.status(400).json({ error: 'Missing email' });
+      response.status(400).json({ error: 'Missing email' });
     }
     if (!password) {
-      return response.status(400).json({ error: 'Missing password' });
+      response.status(400).json({ error: 'Missing password' });
     }
 
     const users = dbClient.db.collection('users');
